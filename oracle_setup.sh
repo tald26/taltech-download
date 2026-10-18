@@ -9,8 +9,18 @@ SERVER_BIN_URL="https://github.com/tald26/taltech-download/releases/download/v1.
 ADMIN_KEY=$(openssl rand -hex 24)
 
 echo "== קורא פרטי החשבון מתוך Cloud Shell..."
-TENANCY_OCID=$(oci iam compartment list --compartment-id-in-subtree false --query "data[0].\"compartment-id\"" --raw-output 2>/dev/null || awk -F= '/^tenancy/{print $2}' ~/.oci/config)
-REGION=$(oci iam region-subscription list --tenancy-id "$TENANCY_OCID" --query "data[0].\"region-name\"" --raw-output)
+# Cloud Shell חושף את זה כמשתנה סביבה; גיבוי: קריאה מקובץ ההגדרות שה-Cloud Shell יוצר לבד
+TENANCY_OCID="${OCI_TENANCY:-}"
+if [ -z "$TENANCY_OCID" ]; then TENANCY_OCID=$(grep -h -m1 '^tenancy' ~/.oci/config 2>/dev/null | cut -d= -f2 | tr -d ' \r\n'); fi
+if [ -z "$TENANCY_OCID" ]; then TENANCY_OCID=$(find ~/.oci -name config 2>/dev/null -exec grep -h -m1 '^tenancy' {} \; | cut -d= -f2 | tr -d ' \r\n'); fi
+if [ -z "$TENANCY_OCID" ]; then
+  echo "לא הצלחתי למצוא את ה-tenancy אוטומטית."
+  echo "הרץ את שתי השורות האלה ושלח לי בדיוק מה שהן מדפיסות:"
+  echo "  echo tenancy_env=\$OCI_TENANCY"
+  echo "  cat ~/.oci/config"
+  exit 1
+fi
+REGION="${OCI_REGION:-$(grep -h -m1 '^region' ~/.oci/config 2>/dev/null | cut -d= -f2 | tr -d ' \r\n')}"
 AD=$(oci iam availability-domain list --compartment-id "$TENANCY_OCID" --query "data[0].name" --raw-output)
 echo "   tenancy=$TENANCY_OCID region=$REGION ad=$AD"
 
