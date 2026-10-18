@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalTech – תמיכה מרחוק</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; background:#f9fafb; color:#1f2937; max-width:640px; margin:60px auto; padding:0 20px; text-align:center; }
+  h1 { font-size:28px; }
+  p { font-size:17px; color:#374151; line-height:1.6; }
+  .btn { display:inline-block; margin-top:24px; padding:16px 40px; background:#16a34a; color:white; text-decoration:none; border-radius:10px; font-size:20px; font-weight:bold; }
+  .note { margin-top:30px; font-size:14px; color:#6b7280; }
+</style>
+</head>
+<body>
+  <h1>🛠️ TalTech – תמיכה מרחוק</h1>
+  <p>תוכנה פשוטה שמאפשרת לטכנאי לעזור לכם מרחוק, רק כשאתם מאשרים.<br>בלי התקנה מסובכת, בלי שום דבר שרץ ברקע בלי ידיעתכם.</p>
+  <a class="btn" id="dl" href="#">⬇ הורדה למחשב</a>
+  <p class="note">אחרי ההורדה: פתחו את הקובץ, הזינו את הקוד שקיבלתם מהטכנאי, ולחצו "אפשר לטכנאי לעזור לי" רק כשאתם רוצים עזרה.<br>Windows עשוי להציג אזהרה על "קובץ לא מוכר" — זה תקין, לחצו "הפעל בכל זאת".</p>
+  <script>
+    fetch('https://api.github.com/repos/tald26/taltech-download/releases/latest')
+      .then(r => r.json())
+      .then(d => { const a = d.assets.find(x => x.name.endsWith('.exe')); if (a) document.getElementById('dl').href = a.browser_download_url; });
+  </script>
+</body>
+</html>
