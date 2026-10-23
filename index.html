@@ -5,22 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TalTech – תמיכה מרחוק</title>
 <style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; background:#f9fafb; color:#1f2937; max-width:640px; margin:60px auto; padding:0 20px; text-align:center; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background:#f9fafb; color:#1f2937; max-width:660px; margin:50px auto; padding:0 20px; text-align:center; }
   h1 { font-size:28px; }
   p { font-size:17px; color:#374151; line-height:1.6; }
-  .btn { display:inline-block; margin-top:24px; padding:16px 40px; background:#16a34a; color:white; text-decoration:none; border-radius:10px; font-size:20px; font-weight:bold; }
-  .note { margin-top:30px; font-size:14px; color:#6b7280; }
+  .btn { display:inline-block; margin-top:20px; padding:16px 40px; background:#16a34a; color:white; text-decoration:none; border-radius:10px; font-size:20px; font-weight:bold; }
+  .alt { display:block; margin-top:12px; font-size:14px; color:#6b7280; }
+  ol { text-align:right; display:inline-block; font-size:16px; line-height:1.9; margin-top:28px; background:white; border:1px solid #e5e7eb; border-radius:10px; padding:14px 38px 14px 22px; }
+  .warn { margin-top:22px; font-size:15px; background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:12px 16px; color:#78350f; text-align:right; }
+  .note { margin-top:26px; font-size:14px; color:#6b7280; }
 </style>
 </head>
 <body>
   <h1>🛠️ TalTech – תמיכה מרחוק</h1>
-  <p>תוכנה פשוטה שמאפשרת לטכנאי לעזור לכם מרחוק, רק כשאתם מאשרים.<br>בלי התקנה מסובכת, בלי שום דבר שרץ ברקע בלי ידיעתכם.</p>
-  <a class="btn" id="dl" href="#">⬇ הורדה למחשב</a>
-  <p class="note">אחרי ההורדה: פתחו את הקובץ, הזינו את הקוד שקיבלתם מהטכנאי, ולחצו "אפשר לטכנאי לעזור לי" רק כשאתם רוצים עזרה.<br>Windows עשוי להציג אזהרה על "קובץ לא מוכר" — זה תקין, לחצו "הפעל בכל זאת".</p>
+  <p>תוכנה פשוטה שמאפשרת לטכנאי לעזור לכם מרחוק, <b>רק כשאתם מאשרים</b>.<br>שום דבר לא רץ בלי ידיעתכם, ואפשר להסיר אותה בכל רגע.</p>
+  <a class="btn" id="dl" href="#">⬇ הורדת תוכנת ההתקנה</a>
+  <a class="alt" id="dl2" href="#" style="display:none">או: גרסה ניידת בלי התקנה</a>
+
+  <ol>
+    <li>הורידו והפעילו את הקובץ (לחצו "הבא" עד הסיום)</li>
+    <li>הזינו את <b>קוד ההזמנה</b> שקיבלתם מהטכנאי</li>
+    <li>כשאתם רוצים עזרה — לחצו <b>"אפשר לטכנאי לעזור לי"</b></li>
+    <li>לסיום: לחצו שוב על הכפתור, או הסירו את התוכנה מ"הוספה/הסרה של תוכניות"</li>
+  </ol>
+
+  <div class="warn">
+    <b>Windows עשוי להציג מסך כחול "Windows protected your PC" / "קובץ לא מוכר".</b><br>
+    זה תקין עבור תוכנה חדשה. לחצו <b>"מידע נוסף"</b> ואז <b>"הפעל בכל זאת"</b>.
+  </div>
+
+  <p class="note">לא קיבלתם קוד הזמנה? פנו לטכנאי שלכם.<br>הקוד חד-פעמי, וכל פעולה שהטכנאי מריץ אצלכם נרשמת ביומן.</p>
+
   <script>
     fetch('https://api.github.com/repos/tald26/taltech-download/releases/latest')
       .then(r => r.json())
-      .then(d => { const a = d.assets.find(x => x.name.endsWith('.exe')); if (a) document.getElementById('dl').href = a.browser_download_url; });
+      .then(d => {
+        const by = n => d.assets.find(x => x.name === n);
+        const setup = by('TalTech-Setup.exe'), portable = by('TalTechRemote.exe');
+        const main = setup || portable;
+        if (main) document.getElementById('dl').href = main.browser_download_url;
+        if (setup && portable) { const a = document.getElementById('dl2'); a.href = portable.browser_download_url; a.style.display = 'block'; }
+      });
   </script>
 </body>
 </html>
